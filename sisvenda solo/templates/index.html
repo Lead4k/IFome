@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>SisVenda | Delivery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones para um ar mais profissional -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="logo">Sis<span>Venda</span></div>
+            <nav>
+                {% if usuario %}
+                <span class="user-badge">Olá, {{ usuario }}</span>
+                <a class="btn-logout" href="/logout">Sair</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Peça sua comida <br><span class="highlight">favorita 🍔</span></h1>
+                <p>Rápido, simples e delicioso. Escolha, peça e retire usando seu código de forma segura.</p>
+
+                {% if not usuario %}
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <form action="/login" method="POST" class="auth-form">
+                            <h3>Entrar</h3>
+                            <input name="usuario" placeholder="Usuário" required>
+                            <input type="password" name="senha" placeholder="Senha" required>
+                            <button class="btn-primary">Acessar Conta</button>
+                        </form>
+                        <div class="divider">ou</div>
+                        <form action="/cadastro" method="POST" class="auth-form">
+                            <h3>Criar Conta</h3>
+                            <input name="usuario" placeholder="Novo usuário" required>
+                            <input type="password" name="senha" placeholder="Senha" required>
+                            <button class="btn-secondary">Cadastrar Agora</button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        {% if usuario %}
+        <section class="content-section">
+            <h2 class="section-title">🍔 Nosso Cardápio</h2>
+            <div class="food-grid">
+                {% for comida, preco in comidas %}
+                <div class="food-card">
+                    <div class="food-icon">🍱</div>
+                    <h3>{{comida}}</h3>
+                    <p class="price">R$ {{preco}}</p>
+                    <a href="/pedir/{{comida}}" class="btn-order">Pedir agora</a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h2 class="section-title">📦 Meus Pedidos</h2>
+            <div class="orders-container">
+                {% if pedidos %}
+                <div class="orders-grid">
+                    {% for p in pedidos %}
+                    <div class="order-card">
+                        <div class="order-info">
+                            <span class="order-name">{{p[0]}}</span>
+                            <span class="order-status">Pronto para retirada</span>
+                        </div>
+                        <div class="order-code">
+                            <small>Código</small>
+                            <strong>{{p[1]}}</strong>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-msg">Você ainda não fez nenhum pedido hoje.</p>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>
